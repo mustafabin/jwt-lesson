@@ -17,13 +17,13 @@ export const userController = {
 
     //if the api POST request is missing some fields throw an err
     if (!email || !password) {
-      return res.status(400).json({ message: "Missing required fields (¬､¬)" });
+      return res.status(400).json({ error: "Missing required fields (¬､¬)" });
     }
 
     //Check if a user with the same email exists
     const doesExist = await UserModel.findOne({ email });
     if (doesExist) {
-      return res.status(400).json({ message: "User already exists ¯_(ツ)_/¯" });
+      return res.status(400).json({ error: "User already exists ¯_(ツ)_/¯" });
     }
 
     //We must hash user's password for security reasons
@@ -61,11 +61,12 @@ export const userController = {
           _id: user.id,
           name: user.name,
           email: user.email,
+          hobbies: user.hobbies,
           token: await generateToken(user.id),
         });
       } else {
         res.status(403).json({
-          message: "Invaild Credentials",
+          error: "Invaild Credentials",
         });
       }
     } catch (error) {
@@ -88,10 +89,10 @@ export const userController = {
         );
         res.json(userProfile);
       } catch {
-        res.status(401).json({ message: "Not Authorized / Incorrect Token" });
+        res.status(401).json({ error: "Not Authorized / Incorrect Token" });
       }
     } else {
-      res.status(400).json({ message: "Missing Token (ToT)" });
+      res.status(400).json({ error: "Missing Token (ToT)" });
     }
   },
 };
